@@ -4,6 +4,7 @@ import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderVO extends Orders implements Serializable {
+public class OrderVO extends Orders {
 
     //璁㈠崟鑿滃搧淇℃伅
     private String orderDishes;

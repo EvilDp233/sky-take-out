@@ -10,48 +10,50 @@ import java.util.Map;
 
 public class JwtUtil {
     /**
-     * ç”Ÿæˆjwt
-     * ä½¿ç”¨Hs256ç®—æ³•, ç§åŒ™ä½¿ç”¨å›ºå®šç§˜é’¥
+     * Éú³Éjwt
+     * Ê¹ÓÃHs256Ëã·¨, Ë½³×Ê¹ÓÃ¹Ì¶¨ÃØÔ¿
      *
-     * @param secretKey jwtç§˜é’¥
-     * @param ttlMillis jwtè¿‡æœŸæ—¶é—´(æ¯«ç§’)
-     * @param claims    è®¾ç½®çš„ä¿¡æ¯
+     * @param secretKey jwtÃØÔ¿
+     * @param ttlMillis jwt¹ıÆÚÊ±¼ä(ºÁÃë)
+     * @param claims    ÉèÖÃµÄĞÅÏ¢
      * @return
      */
     public static String createJWT(String secretKey, long ttlMillis, Map<String, Object> claims) {
-        // æŒ‡å®šç­¾åçš„æ—¶å€™ä½¿ç”¨çš„ç­¾åç®—æ³•ï¼Œä¹Ÿå°±æ˜¯headeré‚£éƒ¨åˆ†
+        // Ö¸¶¨Ç©ÃûµÄÊ±ºòÊ¹ÓÃµÄÇ©ÃûËã·¨£¬Ò²¾ÍÊÇheaderÄÇ²¿·Ö
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-        // ç”ŸæˆJWTçš„æ—¶é—´
+        // Éú³ÉJWTµÄÊ±¼ä
         long expMillis = System.currentTimeMillis() + ttlMillis;
         Date exp = new Date(expMillis);
 
-        // è®¾ç½®jwtçš„body
+        // ÉèÖÃjwtµÄbody
         JwtBuilder builder = Jwts.builder()
-                // å¦‚æœæœ‰ç§æœ‰å£°æ˜ï¼Œä¸€å®šè¦å…ˆè®¾ç½®è¿™ä¸ªè‡ªå·±åˆ›å»ºçš„ç§æœ‰çš„å£°æ˜ï¼Œè¿™ä¸ªæ˜¯ç»™builderçš„claimèµ‹å€¼ï¼Œä¸€æ—¦å†™åœ¨æ ‡å‡†çš„å£°æ˜èµ‹å€¼ä¹‹åï¼Œå°±æ˜¯è¦†ç›–äº†é‚£äº›æ ‡å‡†çš„å£°æ˜çš„
+                // Èç¹ûÓĞË½ÓĞÉùÃ÷£¬Ò»¶¨ÒªÏÈÉèÖÃÕâ¸ö×Ô¼º´´½¨µÄË½ÓĞµÄÉùÃ÷£¬Õâ¸öÊÇ¸øbuilderµÄclaim¸³Öµ£¬Ò»µ©Ğ´ÔÚ±ê×¼µÄÉùÃ÷¸³ÖµÖ®ºó£¬¾ÍÊÇ¸²¸ÇÁËÄÇĞ©±ê×¼µÄÉùÃ÷µÄ
                 .setClaims(claims)
-                // è®¾ç½®ç­¾åä½¿ç”¨çš„ç­¾åç®—æ³•å’Œç­¾åä½¿ç”¨çš„ç§˜é’¥
-                .signWith(signatureAlgorithm, secretKey.getBytes(StandardCharsets.UTF_8))
-                // è®¾ç½®è¿‡æœŸæ—¶é—´
+                // ÉèÖÃÇ©ÃûÊ¹ÓÃµÄÇ©ÃûËã·¨ºÍÇ©ÃûÊ¹ÓÃµÄÃØÔ¿
+                .signWith(SignatureAlgorithm.HS256, io.jsonwebtoken.security.Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+                // ÉèÖÃ¹ıÆÚÊ±¼ä
                 .setExpiration(exp);
 
         return builder.compact();
     }
 
     /**
-     * Tokenè§£å¯†
+     * Token½âÃÜ
      *
-     * @param secretKey jwtç§˜é’¥ æ­¤ç§˜é’¥ä¸€å®šè¦ä¿ç•™å¥½åœ¨æœåŠ¡ç«¯, ä¸èƒ½æš´éœ²å‡ºå», å¦åˆ™signå°±å¯ä»¥è¢«ä¼ªé€ , å¦‚æœå¯¹æ¥å¤šä¸ªå®¢æˆ·ç«¯å»ºè®®æ”¹é€ æˆå¤šä¸ª
-     * @param token     åŠ å¯†åçš„token
+     * @param secretKey jwtÃØÔ¿ ´ËÃØÔ¿Ò»¶¨Òª±£ÁôºÃÔÚ·şÎñ¶Ë, ²»ÄÜ±©Â¶³öÈ¥, ·ñÔòsign¾Í¿ÉÒÔ±»Î±Ôì, Èç¹û¶Ô½Ó¶à¸ö¿Í»§¶Ë½¨Òé¸ÄÔì³É¶à¸ö
+     * @param token     ¼ÓÃÜºóµÄtoken
      * @return
      */
     public static Claims parseJWT(String secretKey, String token) {
-        // å¾—åˆ°DefaultJwtParser
-        Claims claims = Jwts.parser()
-                // è®¾ç½®ç­¾åçš„ç§˜é’¥
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
-                // è®¾ç½®éœ€è¦è§£æçš„jwt
-                .parseClaimsJws(token).getBody();
+        // Ê¹ÓÃĞÂµÄ½âÎöÆ÷API
+        Claims claims = Jwts.parserBuilder()
+                // ÉèÖÃÇ©ÃûµÄÃØÔ¿
+                .setSigningKey(io.jsonwebtoken.security.Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+                // ¹¹½¨½âÎöÆ÷²¢½âÎötoken
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         return claims;
     }
 

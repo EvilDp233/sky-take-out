@@ -18,9 +18,9 @@
         <module>sky-server</module>
     </modules>
     <properties>
-        <java.version>21</java.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <mybatis.spring>2.2.0</mybatis.spring>
         <lombok>1.18.30</lombok>
         <fastjson>1.2.83</fastjson>
@@ -78,6 +78,7 @@
                 <version>${knife4j}</version>
             </dependency>
 
+
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
@@ -131,7 +132,7 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi}</version>
             </dependency>
-            <!--寰俊鏀粯-->
+            <!--瀵邦喕淇婇弨顖欑帛-->
             <dependency>
                 <groupId>com.github.wechatpay-apiv3</groupId>
                 <artifactId>wechatpay-apache-httpclient</artifactId>
